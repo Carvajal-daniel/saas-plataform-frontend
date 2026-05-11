@@ -364,7 +364,7 @@ export function Hero() {
 
       <section
         id="inicio"
-        className="relative overflow-hidden md:mt-20 pb-20 min-h-dvh"
+        className="relative overflow-hidden md:mt-20 pb-20 min-h-dvh mt-10"
       >
         {/* Subtle background orbs */}
         <div style={{

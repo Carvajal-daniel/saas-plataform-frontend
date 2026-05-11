@@ -29,7 +29,7 @@ export function Navbar() {
 
   return (
     <header
-      className="sticky top-0 z-40 w-full"
+      className="fixed top-0 z-40 w-full"
       style={{
         background: "white",
         borderBottom: "1px solid #E2E8F0",
