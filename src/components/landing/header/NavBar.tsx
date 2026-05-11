@@ -64,7 +64,7 @@ export function Navbar() {
         {/* DESKTOP ACTIONS */}
         <div className="hidden items-center gap-3 md:flex">
           <Link
-            href="/login"
+            href="/client/login"
             className="rounded-md px-3 py-2 text-[14px] font-medium transition-colors hover:bg-[#F0F2F8]"
             style={{ color: "#1B2559" }}
           >
@@ -218,7 +218,7 @@ export function Navbar() {
                 </Link>
 
                 <Link
-                  href="/registro"
+                  href="/client/register"
                   onClick={() => setOpen(false)}
                   className="flex items-center justify-center gap-2 text-[15px] font-semibold text-white"
                   style={{
