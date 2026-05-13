@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { FaLinkedin, FaInstagram, FaTwitter } from "react-icons/fa";
-import { Logo } from "../header/Logo";
+import { Logo } from "../../layout/header/Logo";
 
 const cols = [
   { title: "Producto", items: ["Funciones", "API", "Panel", "Integraciones", "Changelog"] },

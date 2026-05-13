@@ -1,10 +1,6 @@
 
-import LoginForm from "@/components/auth/login-form/LoginForm";
-import { Montserrat } from "next/font/google";
-const fontLogo = Montserrat({
-  subsets: ["latin"],
-  weight: ["900"],
-});
+import LoginForm from "@/features/auth/componentes/client/login/LoginForm";
+
 
 export default function LoginPage() {
   return (

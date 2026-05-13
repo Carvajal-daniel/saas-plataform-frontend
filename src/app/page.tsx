@@ -1,11 +1,10 @@
 
 
-import { BentoGrid } from "@/components/BentoGrid";
-import { CTA } from "@/components/cta/CTA";
-import { Hero } from "@/components/landing/hero/Hero";
-import { Footer } from "@/components/landing/footer/Footer";
-import Pricing from "@/components/landing/pricing/Pricing";
-import { Navbar } from "@/components/landing/header/NavBar";
+import { Hero } from "@/components/marketing/hero/Hero";
+import Pricing from "@/components/marketing/pricing/Pricing";
+import { Navbar } from "@/components/layout/header/NavBar";
+import { CTA } from "@/components/marketing/cta/CTA";
+import { Footer } from "@/components/layout/footer/Footer";
 
 
 export default function Home() {
@@ -18,9 +17,6 @@ export default function Home() {
    <main>
     <section>
     < Hero/>
-<section>
-  <BentoGrid />
-</section>
     </section>
     <section>
     <Pricing />

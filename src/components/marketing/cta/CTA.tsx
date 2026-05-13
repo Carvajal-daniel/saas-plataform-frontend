@@ -1,7 +1,7 @@
 "use client";
 
+import { ShineButton } from "@/components/ui/ShineButton";
 import { motion } from "framer-motion";
-import { ShineButton } from "../ui/ShineButton";
 
 const partners = [
   { name: "Lumen", color: "from-blue-500 to-cyan-500" },

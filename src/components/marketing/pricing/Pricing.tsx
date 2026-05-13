@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Gradient from "@/lib/gradient/Gradient";
+import Gradient from "@/features/lib/gradient/Gradient";
 import { Button } from "@/components/ui/Button";
 import { Check } from "lucide-react";
 

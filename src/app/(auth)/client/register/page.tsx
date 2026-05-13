@@ -1,4 +1,6 @@
-import RegisterPage from "@/components/auth/register-client-form/RegisterForm";
+import RegisterPage from "@/features/auth/componentes/client/register/RegisterForm";
+
+
 
 
 export default function RegisterClientPage() {
