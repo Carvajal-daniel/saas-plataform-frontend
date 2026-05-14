@@ -5,7 +5,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Mail, Grid3x3, CreditCard, User, Phone, Lock, Eye, EyeOff } from "lucide-react";
 
-import { PRIMARY_GRADIENT } from "@/components/landing/ui";
 import { Logo } from "@/components/layout/header/Logo";
 import { AuthLayout } from "../ui/auth-layout";
 import { AuthHeroInfo } from "../ui/auth-hero-info";
