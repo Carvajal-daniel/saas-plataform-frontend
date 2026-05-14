@@ -2,7 +2,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { fadeUp } from "../../landing/Reveal";
+import { fadeUp } from "../../ui/Reveal";
 
 export function Badge() {
   return (

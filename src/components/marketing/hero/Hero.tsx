@@ -3,9 +3,8 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { container, fadeUp } from "../../landing/Reveal";
+import { container, fadeUp } from "../../ui/Reveal";
 
-// Importaciones de tus nuevos subcomponentes optimizados
 import { Badge } from "./badge";
 import { Notification } from "./notification";
 import { MainCard } from "./main-card";
@@ -15,7 +14,7 @@ import { AIChip } from "./ai-chip";
 
 export function Hero() {
   return (
-    <section id="inicio" className="relative overflow-hidden md:mt-20 pb-20 min-h-dvh mt-10">
+    <section id="inicio" className="relative overflow-hidden md:mt-30 pb-20 min-h-dvh mt-10">
       
       {/* Background Orbs con optimización nativa */}
       <div className="absolute -top-[180px] -right-[100px] w-[560px] h-[560px] rounded-full bg-[radial-gradient(circle,rgba(249,115,22,0.07)_0%,rgba(236,72,153,0.06)_40%,rgba(124,58,237,0.05)_70%,transparent_100%)] pointer-events-none" />

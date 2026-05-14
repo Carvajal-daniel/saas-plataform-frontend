@@ -21,7 +21,7 @@ export function MainCard() {
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
+          <div className="text-[10px] fontq-medium text-muted-foreground uppercase tracking-widest">
             Dashboard CRM
           </div>
           <div className="text-[14px] font-extrabold text-[#1B2559] tracking-tight mt-0.5">
@@ -55,11 +55,10 @@ export function MainCard() {
             <div
               key={i}
               style={{ height: `${h}%` }}
-              className={`flex-1 rounded-t-[3px] ${
-                i === 5 
-                  ? "bg-gradient-to-r from-[#F97316] via-[#EC4899] to-[#7C3AED]" 
-                  : "bg-[#E0DBFA]"
-              }`}
+              className={`flex-1 rounded-t-[3px] ${i === 5
+                ? "bg-gradient-to-r from-[#F97316] via-[#EC4899] to-[#7C3AED]"
+                : "bg-[#E0DBFA]"
+                }`}
             />
           ))}
         </div>
@@ -71,13 +70,12 @@ export function MainCard() {
           <div key={p.label} className="flex items-center gap-1.75">
             <span className="text-[10px] text-slate-500 w-14 shrink-0">{p.label}</span>
             <div className="flex-1 h-1 bg-[#EDE9FF] rounded-full overflow-hidden">
-              <div 
-                style={{ width: p.w }} 
-                className={`h-full rounded-full ${
-                  p.grad 
-                    ? "bg-gradient-to-r from-[#F97316] via-[#EC4899] to-[#7C3AED]" 
-                    : p.color
-                }`} 
+              <div
+                style={{ width: p.w }}
+                className={`h-full rounded-full ${p.grad
+                  ? "bg-gradient-to-r from-[#F97316] via-[#EC4899] to-[#7C3AED]"
+                  : p.color
+                  }`}
               />
             </div>
             <span className="text-[10px] font-bold text-[#1B2559] w-6 text-right">{p.val}</span>

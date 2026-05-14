@@ -80,7 +80,7 @@ export function Navbar() {
             </Link>
 
             <Link
-              href="/registro"
+              href="/client/register"
               className="btn-primary-gradient rounded-lg px-5 py-2.5 text-[14px] font-semibold text-white transition-transform duration-150 active:scale-95"
             >
               Prueba gratis
