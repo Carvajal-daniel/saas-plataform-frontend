@@ -3,13 +3,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 
 import { Logo } from "@/components/layout/header/Logo";
 import { LoginHeroInfo } from "./login-hero-info";
 import { InputField } from "../ui/input-field";
 import { AuthLayout } from "../ui/auth-layout";
+import { AnimatedSection } from "@/components/ui/animated-section";
+import { Button } from "@/components/ui/Button";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,15 +18,11 @@ export default function LoginForm() {
   return (
     <AuthLayout rightContent={<LoginHeroInfo />}>
       {/* HEADER */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-      >
+      <AnimatedSection delay={0.1}>
         <Logo size={24} />
         <h1 className="mt-8 text-3xl font-bold text-[#1B2559] dark:text-white">Bienvenido de vuelta</h1>
         <p className="mt-2 text-slate-500">Ingrese sus credenciales para continuar</p>
-      </motion.div>
+      </AnimatedSection>
 
       {/* FORMULARIO */}
       <form className="mt-8 flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
@@ -61,64 +58,47 @@ export default function LoginForm() {
         </InputField>
 
         {/* Olvidó contraseña */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.36, duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-          className="text-right"
-        >
+        <AnimatedSection delay={0.36} className="text-right">
           <a href="#" className="text-[13px] font-medium text-purple-600 hover:underline">
             ¿Olvidó su contraseña?
           </a>
-        </motion.div>
+        </AnimatedSection>
 
-        {/* Botón Principal */}
-        <motion.button
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-          type="submit"
-          className="h-12 w-full btn-primary-gradient rounded-xl font-bold text-white transition-all hover:opacity-90 cursor-pointer"
-        >
-          Iniciar sesión
-        </motion.button>
+        <AnimatedSection delay={0.4}>
+          <Button
+            type="submit"
+            className="h-12 w-full btn-primary-gradient rounded-xl font-bold text-white transition-all hover:opacity-90 cursor-pointer"
+          >
+            Iniciar sesión
+          </Button>
+        </AnimatedSection>
 
         {/* Separador */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.52, duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-          className="my-2 flex items-center gap-3"
-        >
+        <AnimatedSection delay={0.52} className="my-2 flex items-center gap-3">
           <div className="h-px flex-1 bg-slate-200 dark:bg-neutral-800" />
           <span className="text-[12px] text-slate-400">o</span>
           <div className="h-px flex-1 bg-slate-200 dark:bg-neutral-800" />
-        </motion.div>
+        </AnimatedSection>
 
         {/* Botón Google */}
-        <motion.button
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-          type="button"
-          className="inline-flex h-12 items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white text-[14px] font-semibold text-[#1B2559] hover:bg-slate-50 transition-colors cursor-pointer dark:border-neutral-800 dark:bg-neutral-900 dark:text-white dark:hover:bg-neutral-800"
-        >
-          <GoogleIcon />
-          Continuar con Google
-        </motion.button>
+        <AnimatedSection delay={0.6}>
+          <Button
+            type="button"
+            variant="outline"
+            className="h-12 w-full gap-3 rounded-xl border-slate-200 bg-white text-[14px] font-semibold text-[#1B2559] hover:bg-slate-50 cursor-pointer dark:border-neutral-800 dark:bg-neutral-900 dark:text-white dark:hover:bg-neutral-800"
+          >
+            <GoogleIcon />
+            Continuar con Google
+          </Button>
+        </AnimatedSection>
 
         {/* Enlace de Registro */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.68, duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-          className="mt-6 text-center text-sm text-slate-500"
-        >
+        <AnimatedSection delay={0.68} className="mt-6 text-center text-sm text-slate-500">
           ¿No tiene cuenta?{" "}
           <Link href="/client/register" className="font-bold text-purple-600 hover:underline">
             Cree una aquí
           </Link>
-        </motion.p>
+        </AnimatedSection>
       </form>
     </AuthLayout>
   );

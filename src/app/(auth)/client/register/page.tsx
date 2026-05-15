@@ -1,4 +1,4 @@
-import RegisterPage from "@/features/auth/componentes/client/register/RegisterForm";
+import RegisterPage from "@/features/auth/components/register/RegisterForm";
 
 
 
