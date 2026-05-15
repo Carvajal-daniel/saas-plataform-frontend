@@ -1,9 +1,7 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: false,
-  experimental: {
-    turbo: false, // força webpack
-  },
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  
 };
 
-module.exports = nextConfig;
+export default nextConfig;
