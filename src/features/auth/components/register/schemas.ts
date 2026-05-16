@@ -7,4 +7,6 @@ export const registerSchema = z.object({
   password: z.string().min(8, "La contraseña deve tener al menos 8 caracteres"),
 });
 
+
+
 export type RegisterInput = z.infer<typeof registerSchema>;

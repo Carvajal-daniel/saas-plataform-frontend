@@ -16,7 +16,7 @@ import { AuthHeroInfo } from "../ui/auth-hero-info";
 import { PasswordRules } from "./password-rules";
 import { RegisterHeader } from "./register-header";
 import { RegisterFooter } from "./register-footer";
-import { registerActions } from "../../actions";
+import { registerActions } from "./actions";
 
 export default function RegisterPage() {
   const router = useRouter();

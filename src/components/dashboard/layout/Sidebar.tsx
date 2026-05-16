@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { useDashboard } from "../lib/dashboard-store";
 
 import { cn } from "@/features/lib/utils";
+import { logoutAction } from "@/features/auth/components/login/api-client";
 
 export type TabKey =
   | "overview"
@@ -70,12 +71,15 @@ export function Sidebar({
 
   const router = useRouter();
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
+const handleLogout = async () => {
+  try {
+    await logoutAction();
 
     router.push("/client/login");
-  };
-
+  } catch (error) {
+    console.error("Erro ao deslogar:", error);
+  }
+};
   return (
     <aside className="flex h-full w-64 flex-col border-r border-border bg-card/60 backdrop-blur-xl">
       <div className="flex items-center gap-3 px-6 py-6">
