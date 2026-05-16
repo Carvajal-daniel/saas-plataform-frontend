@@ -354,7 +354,11 @@ function ServicesPanel() {
           </div>
           <Field label="Descrição"><textarea rows={3} className={inputCls} value={editing.description} onChange={e => setEditing({ ...editing, description: e.target.value })} /></Field>
         </>}
+
+          
+
       </Modal>
+      
     </>
   );
 }
