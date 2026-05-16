@@ -88,7 +88,7 @@ export default function RegisterPage() {
         return;
       }
 
-      router.push("/");
+      router.push("/dashboard");
     } catch (error) {
       setErrors({ global: "Ocurrió un error inesperado. Intente de nuevo." });
     } finally {
