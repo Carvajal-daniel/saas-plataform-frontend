@@ -64,12 +64,10 @@ export function SettingsTab() {
 
   const toggleDay = (d: number) => setClosedDays((arr) => (arr.includes(d) ? arr.filter((x) => x !== d) : [...arr, d].sort()));
 
-  const logout = () => {
-    toast("Sessão encerrada.", { description: "Você foi desconectado do painel." });
-  };
+ 
 
   return (
-    <div className="space-y-5 max-w-3xl">
+    <div className="space-y-5 max-w-5xl mx-auto">
       <div className="rounded-2xl border border-border bg-card overflow-hidden">
         <div className="h-1 w-full btn-primary-gradient" />
         <div className="p-6">
@@ -134,7 +132,7 @@ export function SettingsTab() {
             <Field label="Dias em que o estabelecimento NÃO funciona">
               <div className="flex flex-wrap gap-2">
                 {WD.map((d, i) => (
-                  <button key={d} type="button" onClick={() => toggleDay(i)} className={cn("px-3 py-1.5 rounded-lg text-xs font-semibold border-2 transition-all", closedDays.includes(i) ? "btn-primary-gradient border-transparent text-white" : "border-border bg-card text-muted-foreground hover:border-primary/40")}>
+                  <button key={d} type="button" onClick={() => toggleDay(i)} className={cn("px-3 py-1.5 rounded-lg text-xs font-semibold border-2 transition-all", closedDays.includes(i) ? "btn-primary-gradient border-none text-white" : "border-border bg-card text-muted-foreground hover:border-primary/40")}>
                     {d}
                   </button>
                 ))}
@@ -159,15 +157,7 @@ export function SettingsTab() {
         </Button>
       </div>
 
-      <div className="rounded-2xl border border-border bg-card p-5 flex items-center justify-between">
-        <div>
-          <p className="text-sm font-bold text-foreground">Sair da conta</p>
-          <p className="text-[11px] text-muted-foreground">Encerrar a sessão atual</p>
-        </div>
-        <Button variant="ghost" onClick={logout} className="inline-flex items-center gap-2 px-4 py-2 h-auto text-sm font-semibold text-rose-500 border border-rose-500/30 hover:bg-rose-500/10 transition-all">
-          <LogOut size={14} /> Sair
-        </Button>
-      </div>
+     
     </div>
   );
 }

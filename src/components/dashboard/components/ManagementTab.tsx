@@ -142,7 +142,7 @@ export function ManagementTab() {
     <div className="space-y-5">
       <div className="flex gap-2">
         {([{ k: "staff", l: "Funcionários", i: Users }, { k: "services", l: "Serviços", i: Scissors }] as { k: "staff" | "services"; l: string; i: typeof Users }[]).map((t) => (
-          <button key={t.k} onClick={() => setTab(t.k)} className={cn("px-4 py-2 rounded-xl text-sm font-medium border inline-flex items-center gap-2 transition-all", tab === t.k ? "btn-primary-gradient border-transparent text-white" : "bg-card border-border text-muted-foreground hover:text-foreground hover:border-primary/40")}>
+          <button key={t.k} onClick={() => setTab(t.k)} className={cn("px-4 py-2 rounded-xl text-sm font-medium border inline-flex items-center gap-2 transition-all", tab === t.k ? "btn-primary-gradient border-none text-white" : "bg-card border-border text-muted-foreground hover:text-foreground hover:border-primary/40")}>
             <t.i size={14} /> {t.l}
           </button>
         ))}
@@ -152,7 +152,7 @@ export function ManagementTab() {
       </div>
 
       {tab === "staff" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-4">
           {staff.map((s) => (
             <div key={s.id} className="rounded-2xl border border-border bg-card overflow-hidden group">
               <div className="h-1 w-full btn-primary-gradient" />
@@ -181,7 +181,7 @@ export function ManagementTab() {
       )}
 
       {tab === "services" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-8 gap-4">
           {services.map((s) => (
             <div key={s.id} className="rounded-2xl border border-border bg-card overflow-hidden">
               <div className="aspect-[16/9] bg-muted overflow-hidden">

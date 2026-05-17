@@ -1,6 +1,13 @@
-import { LayoutDashboard, CalendarDays, Wallet, Users, Settings, Sparkles } from "lucide-react";
+
+import { LayoutDashboard, CalendarDays, Wallet, Users, Settings, Sparkles, LogOut, Loader2 } from "lucide-react";
 import { useDashboard, type TabKey } from "../lib/dashboard-store";
 import { cn } from "@/features/lib/utils";
+import { Button } from "@/components/ui/Button";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { logoutAction } from "@/features/auth/components/login/api-client";
+
 const items: { key: TabKey; label: string; icon: React.ComponentType<{ size?: number; className?: string }> }[] = [
   { key: "overview",     label: "Visão Geral", icon: LayoutDashboard },
   { key: "appointments", label: "Agenda",      icon: CalendarDays },
@@ -9,8 +16,45 @@ const items: { key: TabKey; label: string; icon: React.ComponentType<{ size?: nu
   { key: "settings",     label: "Ajustes",     icon: Settings },
 ];
 
+
+
 export function Sidebar({ collapsed }: { collapsed: boolean }) {
   const { activeTab, setActiveTab, business } = useDashboard();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+const router = useRouter();
+
+
+
+
+const logout = async () => {
+  try {
+    setIsLoggingOut(true);
+
+    toast("Encerrando sessão...", {
+      description: "Saindo do painel...",
+    });
+
+    await new Promise((resolve) =>
+      setTimeout(resolve, 1200)
+    );
+
+    await logoutAction();
+
+    toast("Sessão encerrada.", {
+      description:
+        "Você foi desconectado.",
+    });
+
+    router.replace("/client/login");
+    router.refresh();
+  } catch (error) {
+    console.error(error);
+
+    toast("Erro ao sair.");
+  } finally {
+    setIsLoggingOut(false);
+  }
+};
   return (
     <aside
       className={cn(
@@ -63,10 +107,24 @@ export function Sidebar({ collapsed }: { collapsed: boolean }) {
           <div className="rounded-2xl p-4 glass">
             <p className="text-xs font-semibold text-foreground">Altair Premium</p>
             <p className="text-[11px] text-muted-foreground mt-0.5">Painel Neo-Minimalist</p>
-            <div className="mt-2 h-1.5 rounded-full bg-muted overflow-hidden">
-              <div className="h-full w-3/4 btn-primary-gradient" />
-            </div>
+            
           </div>
+           <div className="rounded-2xl border border-border p-5 flex items-center justify-between">
+        <div>
+          <p className="text-sm font-bold text-foreground">Sair da conta</p>
+          <p className="text-[11px] text-muted-foreground">Encerrar a sessão atual</p>
+        </div>
+       <Button onClick={logout} disabled={isLoggingOut} className={"btn-primary-gradient text-white cursor-pointer"}>
+  {isLoggingOut ? (
+    <div className="flex items-center gap-2">
+      <Loader2 className="h-4 w-4 animate-spin " />
+      Saindo...
+    </div>
+  ) : (
+    "Sair"
+  )}
+</Button>
+      </div>
         </div>
       )}
     </aside>

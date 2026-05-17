@@ -970,10 +970,22 @@ cookie@^0.7.1:
   resolved "https://registry.npmjs.org/cookie/-/cookie-0.7.2.tgz"
   integrity sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==
 
+cookie@^1.0.1:
+  version "1.1.1"
+  resolved "https://registry.npmjs.org/cookie/-/cookie-1.1.1.tgz"
+  integrity sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==
+
 cookie@^1.0.2:
   version "1.1.1"
   resolved "https://registry.npmjs.org/cookie/-/cookie-1.1.1.tgz"
   integrity sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==
+
+cookies-next@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.npmjs.org/cookies-next/-/cookies-next-6.1.1.tgz"
+  integrity sha512-8JZBc4IN2m8xqOXyG7uicth6yH3SvynAUGSeV/FQ5lcEclzNGoR0+YCjySdn8r6keZdRyGQr4YJ8qy8F+Jq5uw==
+  dependencies:
+    cookie "^1.0.1"
 
 core-js@^3.6.0, core-js@^3.8.3:
   version "3.49.0"
@@ -2058,7 +2070,7 @@ negotiator@^1.0.0:
   resolved "https://registry.npmjs.org/negotiator/-/negotiator-1.0.0.tgz"
   integrity sha512-8Ofs/AUQh8MaEcrlq5xOX0CQ9ypTF5dl78mjlMNfOK08fzpgTHQRQPBxcPlEtIw0yRpws+Zo/3r+5WRby7u3Gg==
 
-next@16.2.3:
+next@>=15.0.0, next@16.2.3:
   version "16.2.3"
   resolved "https://registry.npmjs.org/next/-/next-16.2.3.tgz"
   integrity sha512-9V3zV4oZFza3PVev5/poB9g0dEafVcgNyQ8eTRop8GvxZjV2G15FC5ARuG1eFD42QgeYkzJBJzHghNP8Ad9xtA==
@@ -2384,7 +2396,7 @@ react-icons@^5.6.0:
     "@types/use-sync-external-store" "^0.0.6"
     use-sync-external-store "^1.4.0"
 
-react@*, "react@^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^16.9.0 || ^17.0.0 || ^18 || ^19", "react@^17 || ^18 || ^19", "react@^18.0 || ^19", "react@^18.0.0 || ^19.0.0", "react@^18.0.0 || ^19.0.0 || ^19.0.0-rc", "react@^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0", react@^19.2.4, "react@>= 16.8.0 || 17.x.x || ^18.0.0-0 || ^19.0.0-0", react@>=16.8.0, react@19.2.4:
+react@*, "react@^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^16.9.0 || ^17.0.0 || ^18 || ^19", "react@^17 || ^18 || ^19", "react@^18.0 || ^19", "react@^18.0.0 || ^19.0.0", "react@^18.0.0 || ^19.0.0 || ^19.0.0-rc", "react@^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0", react@^19.2.4, "react@>= 16.8.0", "react@>= 16.8.0 || 17.x.x || ^18.0.0-0 || ^19.0.0-0", react@>=16.8.0, react@19.2.4:
   version "19.2.4"
   resolved "https://registry.npmjs.org/react/-/react-19.2.4.tgz"
   integrity sha512-9nfp2hYpCwOjAN+8TZFGhtWEwgvWHXqESH8qT89AT/lWklpLON22Lc8pEtnpsZz7VmawabSU0gCjnj8aC0euHQ==
