@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { Geist, Inter_Tight } from "next/font/google";
 import { cn } from "@/features/lib/utils";
+import { Toaster } from 'sonner';
 
 const geist = Geist({
   subsets: ['latin'],
@@ -34,6 +35,12 @@ export default function RootLayout({
     >
       <body className="font-sans">
         {children}
+          <Toaster
+      position="top-right"
+      richColors
+      expand
+      closeButton
+    />
       </body>
     </html>
   )

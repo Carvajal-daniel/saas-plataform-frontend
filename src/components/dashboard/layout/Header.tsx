@@ -1,78 +1,521 @@
+"use client";
+
 import * as React from "react";
-import { Bell, Menu, Moon, Sun, Search } from "lucide-react";
+import {
+  Bell,
+  Menu,
+  X as XIcon,
+  Search,
+  Sparkles,
+  Check,
+  CalendarDays,
+  Wallet,
+  LayoutDashboard,
+  BarChart3,
+  Settings,
+  ClipboardList,
+} from "lucide-react";
+
 import { useDashboard } from "../lib/dashboard-store";
-import { Button } from "@/components/ui/Button";
 import { cn } from "@/features/lib/utils";
 
-export function Header({ onOpenSidebar, title }: { onOpenSidebar: () => void; title: string }) {
-  const { settings, notifications, setNotifications, dark, toggleDark } = useDashboard();
-  const [openNotif, setOpenNotif] = React.useState(false);
-  const unread = notifications.filter(n => !n.read).length;
+// Mapeamento de ícones para o menu mobile
+const tabIcons: Record<string, any> = {
+  overview: LayoutDashboard,
+  appointments: CalendarDays,
+  financial: Wallet,
+  management: BarChart3,
+  settings: Settings,
+};
+
+const titles: Record<
+  string,
+  {
+    title: string;
+    sub: string;
+  }
+> = {
+  overview: {
+    title: "Visão Geral",
+    sub: "Resumo de hoje e métricas-chave",
+  },
+
+  appointments: {
+    title: "Agenda",
+    sub: "Gerencie agendamentos e disponibilidade",
+  },
+
+  financial: {
+    title: "Financeiro",
+    sub: "Faturamento, comissões e pagamentos",
+  },
+
+  management: {
+    title: "Gestão",
+    sub: "Funcionários e serviços",
+  },
+
+  settings: {
+    title: "Ajustes",
+    sub: "Identidade do negócio",
+  },
+};
+
+export function Header({
+  onToggleSidebar,
+}: {
+  onToggleSidebar: () => void;
+}) {
+  const {
+    business,
+    notifications,
+    activeTab,
+    markNotificationRead,
+    markAllRead,
+    navigateTo,
+
+    // SEARCH
+    search,
+    setSearch,
+    globalSearch,
+  } = useDashboard();
+
+  const results = React.useMemo(() => {
+    if (!search.trim()) return [];
+
+    return globalSearch(search);
+  }, [search, globalSearch]);
+
+  const [openNotif, setOpenNotif] =
+    React.useState(false);
+
+  const [
+    openMobileMenu,
+    setOpenMobileMenu,
+  ] = React.useState(false);
+
+  const notifRef =
+    React.useRef<HTMLDivElement>(null);
+
+  const menuRef =
+    React.useRef<HTMLDivElement>(null);
+
+  // Fecha menus ao clicar fora
+  React.useEffect(() => {
+    const fn = (e: MouseEvent) => {
+      if (
+        notifRef.current &&
+        !notifRef.current.contains(
+          e.target as Node
+        )
+      ) {
+        setOpenNotif(false);
+      }
+
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(
+          e.target as Node
+        )
+      ) {
+        setOpenMobileMenu(false);
+      }
+    };
+
+    document.addEventListener(
+      "mousedown",
+      fn
+    );
+
+    return () => {
+      document.removeEventListener(
+        "mousedown",
+        fn
+      );
+    };
+  }, []);
+
+  const unread =
+    notifications.filter(
+      (n) => !n.read
+    ).length;
+
+  const t = titles[activeTab] || {
+    title: "Painel",
+    sub: "Gerenciamento",
+  };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-background/70 px-4 backdrop-blur-xl md:px-6">
-      <Button variant="ghost" size="icon" className="md:hidden" onClick={onOpenSidebar}>
-        <Menu className="h-5 w-5" />
-      </Button>
-
-      <div className="flex items-baseline gap-2">
-        <span className="text-sm font-semibold tracking-tight text-foreground md:hidden">{settings.businessName}</span>
-        <span className="hidden text-sm font-medium text-muted-foreground md:inline">{title}</span>
-      </div>
-
-      <div className="ml-auto flex items-center gap-2">
-        <div className="relative hidden md:block">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input
-            placeholder="Buscar..."
-            className="h-9 w-56 rounded-lg border border-input bg-card/60 pl-9 pr-3 text-sm outline-none transition-all focus:w-72 focus:border-ring focus:ring-2 focus:ring-ring/20"
-          />
-        </div>
-
-        <Button variant="ghost" size="icon" onClick={toggleDark} aria-label="Alternar tema">
-          {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-        </Button>
-
-        <div className="relative">
-          <Button variant="ghost" size="icon" onClick={() => setOpenNotif(o => !o)} aria-label="Notificações">
-            <Bell className="h-4 w-4" />
-            {unread > 0 && (
-              <span className="absolute right-1.5 top-1.5 flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-rose-500" />
-              </span>
+    <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur-md">
+      <div className="flex items-center gap-3 px-4 md:px-8 py-3.5">
+        {/* MENU */}
+        <div
+          ref={menuRef}
+          className="relative"
+        >
+          <button
+            onClick={() => {
+              if (
+                window.innerWidth < 768
+              ) {
+                setOpenMobileMenu(
+                  (o) => !o
+                );
+              } else {
+                onToggleSidebar();
+              }
+            }}
+            type="button"
+            className="p-2 rounded-xl hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+          >
+            {openMobileMenu ? (
+              <XIcon size={18} />
+            ) : (
+              <Menu size={18} />
             )}
-          </Button>
-          {openNotif && (
-            <>
-              <div className="fixed inset-0 z-40" onClick={() => setOpenNotif(false)} />
-              <div className="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-2xl border border-border bg-card shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="flex items-center justify-between border-b border-border p-4">
-                  <div className="text-sm font-semibold">Notificações</div>
-                  <button
-                    onClick={() => setNotifications(ns => ns.map(n => ({ ...n, read: true })))}
-                    className="text-xs text-muted-foreground hover:text-foreground"
-                  >Marcar todas como lidas</button>
-                </div>
-                <ul className="max-h-80 overflow-y-auto">
-                  {notifications.map(n => (
-                    <li key={n.id} className={cn("flex gap-3 border-b border-border/60 p-4 last:border-0 transition-colors hover:bg-muted/40", !n.read && "bg-muted/30")}>
-                      <span className={cn("mt-1.5 h-2 w-2 shrink-0 rounded-full", n.read ? "bg-border" : "btn-primary-gradient")} />
-                      <div className="min-w-0 flex-1">
-                        <div className="text-sm font-medium text-foreground">{n.title}</div>
-                        <div className="truncate text-xs text-muted-foreground">{n.message}</div>
-                        <div className="mt-1 text-[10px] uppercase tracking-wide text-muted-foreground">{n.time}</div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+          </button>
+
+          {openMobileMenu && (
+            <div className="absolute left-0 top-12 w-56 rounded-2xl bg-card border border-border shadow-2xl overflow-hidden z-50 md:hidden animate-in fade-in slide-in-from-top-2 duration-150">
+              <div className="h-1 w-full btn-primary-gradient" />
+
+              <div className="p-2 space-y-1">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 px-3 py-1.5">
+                  Navegação
+                </p>
+
+                {Object.keys(
+                  titles
+                ).map((key) => {
+                  const item =
+                    titles[key];
+
+                  const Icon =
+                    tabIcons[key] ||
+                    ClipboardList;
+
+                  const isActive =
+                    activeTab === key;
+
+                  return (
+                    <button
+                      key={key}
+                      onClick={() => {
+                        navigateTo(
+                          key as any
+                        );
+
+                        setOpenMobileMenu(
+                          false
+                        );
+                      }}
+                      className={cn(
+                        "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-left",
+                        isActive
+                          ? "btn-primary-gradient text-white shadow-sm"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      )}
+                    >
+                      <Icon
+                        size={16}
+                        className={cn(
+                          isActive
+                            ? "text-white"
+                            : "text-muted-foreground"
+                        )}
+                      />
+
+                      <span>
+                        {item.title}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
-            </>
+            </div>
           )}
         </div>
 
-        <div className="ml-1 flex h-9 w-9 items-center justify-center overflow-hidden rounded-full btn-primary-gradient text-sm font-semibold text-white">
-          {settings.avatar ? <img src={settings.avatar} alt="avatar" className="h-full w-full object-cover" /> : settings.profileName.split(" ").map(s => s[0]).slice(0,2).join("")}
+        {/* BRAND */}
+        <div className="md:hidden flex items-center gap-2">
+          {business.logoUrl ? (
+            <img
+              src={business.logoUrl}
+              alt=""
+              className="w-7 h-7 rounded-lg object-cover"
+            />
+          ) : (
+            <div className="w-7 h-7 rounded-lg btn-primary-gradient flex items-center justify-center">
+              <Sparkles
+                size={12}
+                className="text-white"
+              />
+            </div>
+          )}
+
+          <span className="text-sm font-bold truncate max-w-[120px]">
+            {business.name}
+          </span>
+        </div>
+
+        {/* TITULO */}
+        <div>
+          <h1 className="text-sm md:text-lg font-bold tracking-tight text-foreground leading-none md:leading-normal">
+            {t.title}
+          </h1>
+
+          <p className="text-[11px] md:text-xs text-muted-foreground hidden sm:block">
+            {t.sub}
+          </p>
+        </div>
+
+        {/* SEARCH */}
+        <div className="hidden lg:flex relative items-center gap-2 ml-6 px-3 py-2 rounded-xl bg-muted/60 border border-border w-72">
+          <Search
+            size={14}
+            className="text-muted-foreground"
+          />
+
+          <input
+            value={search}
+            onChange={(e) =>
+              setSearch(
+                e.target.value
+              )
+            }
+            onKeyDown={(e) => {
+              if (
+                e.key !== "Enter"
+              ) {
+                return;
+              }
+
+              const first =
+                results[0];
+
+              if (!first) return;
+
+              if (
+                first.type ===
+                "appointment"
+              ) {
+                navigateTo(
+                  "appointments",
+                  {
+                    appointmentId:
+                      first.id,
+                  }
+                );
+              }
+
+              if (
+                first.type ===
+                  "service" ||
+                first.type ===
+                  "staff"
+              ) {
+                navigateTo(
+                  "management"
+                );
+              }
+
+              setSearch("");
+            }}
+            className="bg-transparent text-sm outline-none flex-1 placeholder:text-muted-foreground/60"
+            placeholder="Buscar clientes, serviços..."
+          />
+
+          {/* RESULTS */}
+          {results.length > 0 && (
+            <div className="absolute top-12 left-0 w-full rounded-2xl border border-border bg-card shadow-2xl overflow-hidden z-50">
+              {results
+                .slice(0, 6)
+                .map((r) => (
+                  <button
+                    key={r.id}
+                    onClick={() => {
+                      if (
+                        r.type ===
+                        "appointment"
+                      ) {
+                        navigateTo(
+                          "appointments",
+                          {
+                            appointmentId:
+                              r.id,
+                          }
+                        );
+                      }
+
+                      if (
+                        r.type ===
+                          "service" ||
+                        r.type ===
+                          "staff"
+                      ) {
+                        navigateTo(
+                          "management"
+                        );
+                      }
+
+                      setSearch("");
+                    }}
+                    className="w-full text-left px-4 py-3 hover:bg-muted border-b border-border last:border-b-0 transition-colors"
+                  >
+                    <p className="text-sm font-semibold text-foreground">
+                      {r.title}
+                    </p>
+
+                    <p className="text-xs text-muted-foreground">
+                      {r.subtitle}
+                    </p>
+                  </button>
+                ))}
+            </div>
+          )}
+        </div>
+
+        {/* NOTIFICAÇÕES */}
+        <div
+          className="ml-auto flex items-center gap-2 relative"
+          ref={notifRef}
+        >
+          <button
+            onClick={() =>
+              setOpenNotif((o) => !o)
+            }
+            className="relative p-2.5 rounded-xl border border-border bg-card hover:bg-muted transition-colors"
+            aria-label="Notificações"
+          >
+            <Bell size={16} />
+
+            {unread > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full btn-primary-gradient text-[10px] font-bold text-white flex items-center justify-center animate-pulse">
+                {unread}
+              </span>
+            )}
+          </button>
+
+          {openNotif && (
+            <div className="absolute right-0 top-12 w-[340px] max-w-[90vw] rounded-2xl bg-card border border-border shadow-2xl overflow-hidden z-50">
+              <div className="h-1 w-full btn-primary-gradient" />
+
+              <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+                <p className="text-sm font-bold">
+                  Notificações
+                </p>
+
+                {unread > 0 && (
+                  <button
+                    onClick={markAllRead}
+                    className="text-[11px] text-primary font-semibold hover:underline"
+                  >
+                    Marcar todas
+                  </button>
+                )}
+              </div>
+
+              <div className="max-h-[360px] overflow-auto">
+                {notifications.length ===
+                0 ? (
+                  <div className="py-10 text-center text-sm text-muted-foreground">
+                    Nenhuma
+                    notificação
+                  </div>
+                ) : (
+                  notifications.map(
+                    (n) => {
+                      const Icon =
+                        n.type ===
+                        "financial"
+                          ? Wallet
+                          : CalendarDays;
+
+                      return (
+                        <button
+                          key={n.id}
+                          onClick={() => {
+                            markNotificationRead(
+                              n.id
+                            );
+
+                            setOpenNotif(
+                              false
+                            );
+
+                            navigateTo(
+                              n.type ===
+                                "financial"
+                                ? "financial"
+                                : "appointments",
+                              {
+                                appointmentId:
+                                  n.targetId,
+                              }
+                            );
+                          }}
+                          className={cn(
+                            "w-full text-left px-4 py-3 flex items-start gap-3 hover:bg-muted/60 transition-colors border-b border-border/60 last:border-b-0",
+                            !n.read &&
+                              "bg-primary/[0.04]"
+                          )}
+                        >
+                          <div
+                            className={cn(
+                              "w-8 h-8 rounded-xl flex items-center justify-center shrink-0",
+                              n.read
+                                ? "bg-muted text-muted-foreground"
+                                : "btn-primary-gradient text-white"
+                            )}
+                          >
+                            {n.read ? (
+                              <Check
+                                size={
+                                  13
+                                }
+                              />
+                            ) : (
+                              <Icon
+                                size={
+                                  13
+                                }
+                              />
+                            )}
+                          </div>
+
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm text-foreground leading-snug">
+                              {n.text}
+                            </p>
+
+                            <p className="text-[10px] text-muted-foreground mt-0.5">
+                              {new Date(
+                                n.createdAt
+                              ).toLocaleString(
+                                "pt-BR",
+                                {
+                                  hour: "2-digit",
+                                  minute:
+                                    "2-digit",
+                                  day: "2-digit",
+                                  month:
+                                    "2-digit",
+                                }
+                              )}
+                            </p>
+                          </div>
+
+                          {!n.read && (
+                            <span className="w-2 h-2 rounded-full bg-primary mt-1.5 shrink-0" />
+                          )}
+                        </button>
+                      );
+                    }
+                  )
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </header>

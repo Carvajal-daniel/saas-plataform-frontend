@@ -6,7 +6,6 @@ import { DashboardProvider } from "@/components/dashboard/lib/dashboard-store";
 export default function Page(){
   return(
     <DashboardProvider>
-
       <Dashboard/>
     </DashboardProvider>
   )

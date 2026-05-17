@@ -1,33 +1,15 @@
-"use client";
-
 import * as React from "react";
+
+export type AppointmentStatus =
+  | "Marcado"
+  | "Concluído"
+  | "Cancelado";
 
 export type StaffStatus =
   | "Ativo"
   | "De Férias"
   | "Ausente"
   | "Inativo";
-
-export interface Staff {
-  id: string;
-  name: string;
-  role: string;
-  status: StaffStatus;
-  avatar?: string | null;
-}
-
-export interface Service {
-  id: string;
-  name: string;
-  price: number;
-  duration: number;
-  description: string;
-}
-
-export type AppointmentStatus =
-  | "Marcado"
-  | "Concluído"
-  | "Cancelado";
 
 export interface Appointment {
   id: string;
@@ -38,323 +20,578 @@ export interface Appointment {
   time: string;
   status: AppointmentStatus;
   price: number;
+  commissionEarned?: number;
+  notes?: string;
+  paid?: boolean;
 }
 
-export interface FinanceMonth {
-  month: string;
-  revenue: number;
-  expenses: number;
-  fixedCosts: number;
-  variableCosts: number;
-}
-
-export interface Settings {
-  profileName: string;
-  businessName: string;
-  phone: string;
-  avatar: string | null;
-}
-
-export interface Notification {
+export interface Staff {
   id: string;
-  title: string;
-  message: string;
-  time: string;
-  read: boolean;
+  name: string;
+  role: string;
+  status: StaffStatus;
+  commissionRate: number;
+  avatarUrl?: string;
+  daysOff: number[];
 }
 
-interface State {
-  staff: Staff[];
-  services: Service[];
+export interface Service {
+  id: string;
+  name: string;
+  price: number;
+  duration: number;
+  description?: string;
+  imageUrl?: string;
+}
+
+export interface BusinessConfig {
+  name: string;
+  logoUrl: string | null;
+  phone: string;
+  closedDays: number[];
+  openTime?: string;
+  closeTime?: string;
+}
+
+export type NotificationType =
+  | "appointment"
+  | "financial";
+
+export interface AppNotification {
+  id: string;
+  text: string;
+  type: NotificationType;
+  targetId?: string;
+  read: boolean;
+  createdAt: number;
+}
+
+export type TabKey =
+  | "overview"
+  | "appointments"
+  | "financial"
+  | "management"
+  | "settings";
+
+// GLOBAL SEARCH
+export interface SearchResult {
+  id: string;
+
+  type:
+    | "appointment"
+    | "service"
+    | "staff";
+
+  title: string;
+
+  subtitle?: string;
+}
+
+interface Ctx {
+  business: BusinessConfig;
+
+  setBusiness: React.Dispatch<
+    React.SetStateAction<BusinessConfig>
+  >;
+
   appointments: Appointment[];
-  finance: FinanceMonth[];
-  settings: Settings;
-  notifications: Notification[];
-
-  setStaff: React.Dispatch<
-    React.SetStateAction<Staff[]>
-  >;
-
-  setServices: React.Dispatch<
-    React.SetStateAction<Service[]>
-  >;
 
   setAppointments: React.Dispatch<
     React.SetStateAction<Appointment[]>
   >;
 
-  setSettings: React.Dispatch<
-    React.SetStateAction<Settings>
+  staff: Staff[];
+
+  setStaff: React.Dispatch<
+    React.SetStateAction<Staff[]>
   >;
 
-  setNotifications: React.Dispatch<
-    React.SetStateAction<Notification[]>
+  services: Service[];
+
+  setServices: React.Dispatch<
+    React.SetStateAction<Service[]>
   >;
 
-  dark: boolean;
+  notifications: AppNotification[];
 
-  toggleDark: () => void;
+  // SEARCH
+  search: string;
+
+  setSearch: React.Dispatch<
+    React.SetStateAction<string>
+  >;
+
+  globalSearch: (
+    query: string
+  ) => SearchResult[];
+
+  pushNotification: (
+    n: Omit<
+      AppNotification,
+      "id" | "read" | "createdAt"
+    >
+  ) => void;
+
+  markNotificationRead: (
+    id: string
+  ) => void;
+
+  markAllRead: () => void;
+
+  activeTab: TabKey;
+
+  setActiveTab: (
+    t: TabKey
+  ) => void;
+
+  focusedAppointmentId: string | null;
+
+  setFocusedAppointmentId: (
+    id: string | null
+  ) => void;
+
+  navigateTo: (
+    tab: TabKey,
+    opts?: {
+      appointmentId?: string;
+    }
+  ) => void;
 }
 
-const Ctx = React.createContext<State | null>(null);
+export const newId = () =>
+  Math.random()
+    .toString(36)
+    .slice(2, 10);
 
-const uid = () =>
-  Math.random().toString(36).slice(2, 10);
+const DashboardCtx =
+  React.createContext<Ctx | null>(
+    null
+  );
+
+const todayStr = () =>
+  new Date()
+    .toISOString()
+    .slice(0, 10);
+
+const dateOffset = (
+  days: number
+) => {
+  const d = new Date();
+
+  d.setDate(
+    d.getDate() + days
+  );
+
+  return d
+    .toISOString()
+    .slice(0, 10);
+};
+
+const seedStaff: Staff[] = [
+  {
+    id: "s1",
+    name: "Ana Costa",
+    role: "Cabeleireira Sênior",
+    status: "Ativo",
+    commissionRate: 40,
+    daysOff: [0],
+    avatarUrl:
+      "https://i.pravatar.cc/120?img=47",
+  },
+
+  {
+    id: "s2",
+    name: "Bruno Lima",
+    role: "Barbeiro",
+    status: "Ativo",
+    commissionRate: 35,
+    daysOff: [0, 1],
+    avatarUrl:
+      "https://i.pravatar.cc/120?img=12",
+  },
+
+  {
+    id: "s3",
+    name: "Carla Souza",
+    role: "Manicure",
+    status: "De Férias",
+    commissionRate: 30,
+    daysOff: [0],
+    avatarUrl:
+      "https://i.pravatar.cc/120?img=32",
+  },
+];
+
+const seedServices: Service[] = [
+  {
+    id: "sv1",
+    name: "Corte Feminino",
+    price: 90,
+    duration: 60,
+    description:
+      "Corte, lavagem e finalização",
+  },
+
+  {
+    id: "sv2",
+    name: "Corte Masculino",
+    price: 50,
+    duration: 30,
+    description:
+      "Corte clássico ou degradê",
+  },
+
+  {
+    id: "sv3",
+    name: "Coloração",
+    price: 220,
+    duration: 120,
+    description:
+      "Coloração completa com hidratação",
+  },
+
+  {
+    id: "sv4",
+    name: "Manicure",
+    price: 45,
+    duration: 45,
+    description: "Mãos e cutículas",
+  },
+];
+
+const seedAppointments: Appointment[] =
+  [
+    {
+      id: newId(),
+      client: "Maria Silva",
+      service:
+        "Corte Feminino",
+      staff: "Ana Costa",
+      date: todayStr(),
+      time: "10:00",
+      status: "Marcado",
+      price: 90,
+    },
+
+    {
+      id: newId(),
+      client: "João Pereira",
+      service:
+        "Corte Masculino",
+      staff: "Bruno Lima",
+      date: todayStr(),
+      time: "14:30",
+      status: "Concluído",
+      price: 50,
+      commissionEarned: 17.5,
+    },
+
+    {
+      id: newId(),
+      client: "Fernanda Reis",
+      service:
+        "Coloração",
+      staff: "Ana Costa",
+      date: dateOffset(1),
+      time: "09:00",
+      status: "Marcado",
+      price: 220,
+    },
+
+    {
+      id: newId(),
+      client: "Pedro Alves",
+      service:
+        "Corte Masculino",
+      staff: "Bruno Lima",
+      date: dateOffset(-1),
+      time: "16:00",
+      status: "Concluído",
+      price: 50,
+      commissionEarned: 17.5,
+    },
+
+    {
+      id: newId(),
+      client: "Luiza Mendes",
+      service:
+        "Manicure",
+      staff: "Carla Souza",
+      date: dateOffset(-3),
+      time: "11:00",
+      status: "Concluído",
+      price: 45,
+      commissionEarned: 13.5,
+    },
+
+    {
+      id: newId(),
+      client: "Carlos Dias",
+      service:
+        "Corte Masculino",
+      staff: "Bruno Lima",
+      date: dateOffset(-2),
+      time: "15:00",
+      status: "Cancelado",
+      price: 50,
+    },
+  ];
 
 export function DashboardProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [staff, setStaff] = React.useState<Staff[]>([
+  const [business, setBusiness] =
+    React.useState<BusinessConfig>({
+      name: "Altair Studio",
+      logoUrl: null,
+      phone:
+        "(85) 99999-9999",
+      closedDays: [0],
+    });
+
+  const [
+    appointments,
+    setAppointments,
+  ] = React.useState<
+    Appointment[]
+  >(seedAppointments);
+
+  const [staff, setStaff] =
+    React.useState<Staff[]>(
+      seedStaff
+    );
+
+  const [services, setServices] =
+    React.useState<Service[]>(
+      seedServices
+    );
+
+  const [
+    notifications,
+    setNotifications,
+  ] = React.useState<
+    AppNotification[]
+  >([
     {
-      id: uid(),
-      name: "Mariana Silva",
-      role: "Cabeleireira Sênior",
-      status: "Ativo",
-      avatar: null,
-    },
-    {
-      id: uid(),
-      name: "Rafael Costa",
-      role: "Barbeiro",
-      status: "Ativo",
-      avatar: null,
-    },
-    {
-      id: uid(),
-      name: "Juliana Mendes",
-      role: "Manicure",
-      status: "De Férias",
-      avatar: null,
-    },
-    {
-      id: uid(),
-      name: "Pedro Almeida",
-      role: "Esteticista",
-      status: "Ausente",
-      avatar: null,
+      id: newId(),
+      text: "Bem-vindo ao Altair — seu painel está pronto.",
+      type: "appointment",
+      read: false,
+      createdAt:
+        Date.now() - 60000,
     },
   ]);
 
-  const [services, setServices] =
-    React.useState<Service[]>([
-      {
-        id: uid(),
-        name: "Corte Feminino",
-        price: 120,
-        duration: 60,
-        description:
-          "Corte personalizado com finalização.",
-      },
-      {
-        id: uid(),
-        name: "Coloração",
-        price: 280,
-        duration: 120,
-        description:
-          "Coloração premium com produtos importados.",
-      },
-      {
-        id: uid(),
-        name: "Manicure",
-        price: 65,
-        duration: 45,
-        description:
-          "Esmaltação e tratamento de cutículas.",
-      },
-      {
-        id: uid(),
-        name: "Barba Premium",
-        price: 80,
-        duration: 40,
-        description:
-          "Barba completa com toalha quente.",
-      },
-    ]);
-
-  const [appointments, setAppointments] =
-    React.useState<Appointment[]>([
-      {
-        id: uid(),
-        client: "Ana Beatriz",
-        service: "Corte Feminino",
-        staff: "Mariana Silva",
-        date: "2026-05-18",
-        time: "10:00",
-        status: "Marcado",
-        price: 120,
-      },
-      {
-        id: uid(),
-        client: "Carlos Eduardo",
-        service: "Barba Premium",
-        staff: "Rafael Costa",
-        date: "2026-05-18",
-        time: "11:30",
-        status: "Marcado",
-        price: 80,
-      },
-      {
-        id: uid(),
-        client: "Fernanda Lima",
-        service: "Coloração",
-        staff: "Mariana Silva",
-        date: "2026-05-16",
-        time: "14:00",
-        status: "Concluído",
-        price: 280,
-      },
-      {
-        id: uid(),
-        client: "Roberto Dias",
-        service: "Manicure",
-        staff: "Juliana Mendes",
-        date: "2026-05-15",
-        time: "16:00",
-        status: "Cancelado",
-        price: 65,
-      },
-      {
-        id: uid(),
-        client: "Patrícia Souza",
-        service: "Corte Feminino",
-        staff: "Mariana Silva",
-        date: "2026-05-14",
-        time: "09:00",
-        status: "Concluído",
-        price: 120,
-      },
-    ]);
-
-  const [finance] =
-    React.useState<FinanceMonth[]>([
-      {
-        month: "Jan",
-        revenue: 18400,
-        expenses: 9200,
-        fixedCosts: 6000,
-        variableCosts: 3200,
-      },
-      {
-        month: "Fev",
-        revenue: 21200,
-        expenses: 10100,
-        fixedCosts: 6000,
-        variableCosts: 4100,
-      },
-      {
-        month: "Mar",
-        revenue: 24800,
-        expenses: 11400,
-        fixedCosts: 6200,
-        variableCosts: 5200,
-      },
-      {
-        month: "Abr",
-        revenue: 22600,
-        expenses: 10800,
-        fixedCosts: 6200,
-        variableCosts: 4600,
-      },
-      {
-        month: "Mai",
-        revenue: 28900,
-        expenses: 12300,
-        fixedCosts: 6400,
-        variableCosts: 5900,
-      },
-      {
-        month: "Jun",
-        revenue: 31200,
-        expenses: 13100,
-        fixedCosts: 6400,
-        variableCosts: 6700,
-      },
-    ]);
-
-  const [settings, setSettings] =
-    React.useState<Settings>({
-      profileName: "Camila Ribeiro",
-      businessName: "Meu Negócio",
-      phone: "(11) 98765-4321",
-      avatar: null,
-    });
-
-  const [notifications, setNotifications] =
-    React.useState<Notification[]>([
-      {
-        id: uid(),
-        title: "Novo agendamento",
-        message:
-          "Ana Beatriz marcou Corte Feminino para amanhã.",
-        time: "há 5 min",
-        read: false,
-      },
-      {
-        id: uid(),
-        title: "Pagamento recebido",
-        message: "R$ 280,00 de Fernanda Lima.",
-        time: "há 1 h",
-        read: false,
-      },
-      {
-        id: uid(),
-        title: "Lembrete",
-        message:
-          "Reunião com equipe às 18h.",
-        time: "há 3 h",
-        read: true,
-      },
-    ]);
-
-  const [dark, setDark] =
-    React.useState(false);
-
-  React.useEffect(() => {
-    document.documentElement.classList.toggle(
-      "dark",
-      dark
+  const [activeTab, setActiveTab] =
+    React.useState<TabKey>(
+      "overview"
     );
-  }, [dark]);
 
-  const value: State = {
-    staff,
-    services,
+  const [
+    focusedAppointmentId,
+    setFocusedAppointmentId,
+  ] = React.useState<
+    string | null
+  >(null);
+
+  // SEARCH
+  const [search, setSearch] =
+    React.useState("");
+
+  // GLOBAL SEARCH
+  const globalSearch: Ctx["globalSearch"] =
+    (query) => {
+      const q =
+        query.toLowerCase();
+
+      const results: SearchResult[] =
+        [];
+
+      appointments.forEach(
+        (a) => {
+          if (
+            a.client
+              .toLowerCase()
+              .includes(q) ||
+            a.service
+              .toLowerCase()
+              .includes(q) ||
+            a.staff
+              .toLowerCase()
+              .includes(q)
+          ) {
+            results.push({
+              id: a.id,
+
+              type:
+                "appointment",
+
+              title: a.client,
+
+              subtitle: `${a.service} • ${a.date}`,
+            });
+          }
+        }
+      );
+
+      services.forEach(
+        (s) => {
+          if (
+            s.name
+              .toLowerCase()
+              .includes(q)
+          ) {
+            results.push({
+              id: s.id,
+
+              type: "service",
+
+              title: s.name,
+
+              subtitle:
+                fmtBRL(s.price),
+            });
+          }
+        }
+      );
+
+      staff.forEach((s) => {
+        if (
+          s.name
+            .toLowerCase()
+            .includes(q)
+        ) {
+          results.push({
+            id: s.id,
+
+            type: "staff",
+
+            title: s.name,
+
+            subtitle: s.role,
+          });
+        }
+      });
+
+      return results;
+    };
+
+  const pushNotification: Ctx["pushNotification"] =
+    (n) => {
+      setNotifications(
+        (arr) => [
+          {
+            ...n,
+            id: newId(),
+            read: false,
+            createdAt:
+              Date.now(),
+          },
+
+          ...arr,
+        ]
+      );
+    };
+
+  const markNotificationRead =
+    (id: string) =>
+      setNotifications((arr) =>
+        arr.map((n) =>
+          n.id === id
+            ? {
+                ...n,
+                read: true,
+              }
+            : n
+        )
+      );
+
+  const markAllRead = () =>
+    setNotifications((arr) =>
+      arr.map((n) => ({
+        ...n,
+        read: true,
+      }))
+    );
+
+  const navigateTo: Ctx["navigateTo"] =
+    (tab, opts) => {
+      setActiveTab(tab);
+
+      if (
+        opts?.appointmentId
+      ) {
+        setFocusedAppointmentId(
+          opts.appointmentId
+        );
+      }
+    };
+
+  const value: Ctx = {
+    business,
+    setBusiness,
+
     appointments,
-    finance,
-    settings,
+    setAppointments,
+
+    staff,
+    setStaff,
+
+    services,
+    setServices,
+
     notifications,
 
-    setStaff,
-    setServices,
-    setAppointments,
-    setSettings,
-    setNotifications,
+    search,
+    setSearch,
 
-    dark,
+    globalSearch,
 
-    toggleDark: () =>
-      setDark((d) => !d),
+    pushNotification,
+
+    markNotificationRead,
+
+    markAllRead,
+
+    activeTab,
+    setActiveTab,
+
+    focusedAppointmentId,
+    setFocusedAppointmentId,
+
+    navigateTo,
   };
 
   return (
-    <Ctx.Provider value={value}>
+    <DashboardCtx.Provider
+      value={value}
+    >
       {children}
-    </Ctx.Provider>
+    </DashboardCtx.Provider>
   );
 }
 
 export function useDashboard() {
-  const v = React.useContext(Ctx);
+  const ctx =
+    React.useContext(
+      DashboardCtx
+    );
 
-  if (!v) {
+  if (!ctx) {
     throw new Error(
-      "useDashboard must be used inside DashboardProvider"
+      "useDashboard must be used within DashboardProvider"
     );
   }
 
-  return v;
+  return ctx;
 }
 
-export const newId = uid;
+export const fmtBRL = (
+  n: number
+) =>
+  n.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });

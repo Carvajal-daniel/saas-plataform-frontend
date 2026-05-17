@@ -1,35 +1,58 @@
 import * as React from "react";
 import { X } from "lucide-react";
+import { cn } from "@/features/lib/utils";
 
-export function Modal({ open, onClose, title, children, footer }: {
-  open: boolean; onClose: () => void; title: string;
-  children: React.ReactNode; footer?: React.ReactNode;
-}) {
+interface ModalProps {
+  open: boolean;
+  onClose: () => void;
+  title?: string;
+  children: React.ReactNode;
+  footer?: React.ReactNode;
+  maxWidth?: string;
+}
+
+export function Modal({ open, onClose, title, children, footer, maxWidth = "max-w-lg" }: ModalProps) {
+  React.useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [open, onClose]);
+
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-foreground/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="glass relative z-10 w-full max-w-lg rounded-2xl bg-card/90 p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-        <div className="mb-4 flex items-start justify-between">
-          <h3 className="text-lg font-semibold tracking-tight text-foreground">{title}</h3>
-          <button onClick={onClose} className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-        <div className="space-y-4">{children}</div>
-        {footer && <div className="mt-6 flex justify-end gap-2">{footer}</div>}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-150">
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+      <div className={cn("relative w-full bg-card border border-border rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]", maxWidth)}>
+        <div className="h-1 w-full btn-primary-gradient" />
+        {title && (
+          <div className="flex items-center justify-between px-5 py-3.5 border-b border-border">
+            <h3 className="text-base font-bold text-foreground tracking-tight">{title}</h3>
+            <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
+              <X size={16} />
+            </button>
+          </div>
+        )}
+        <div className="flex-1 overflow-auto p-5">{children}</div>
+        {footer && <div className="px-5 py-3 border-t border-border bg-muted/30 flex items-center justify-end gap-2">{footer}</div>}
       </div>
     </div>
   );
 }
 
-export function Field({ label, children }: { label: string; children: React.ReactNode }) {
+export const inputCls =
+ "w-full px-3.5 py-2.5 rounded-xl bg-background border border-border text-sm text-foreground calendar-picker-premium placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all";
+
+export function Field({ label, children, hint }: { label: string; children: React.ReactNode; hint?: string }) {
   return (
-    <label className="block">
-      <span className="mb-1.5 block text-xs font-medium text-muted-foreground">{label}</span>
+    <label className="block  space-y-1.5">
+      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{label}</span>
       {children}
+      {hint && <span className="block text-[11px] text-muted-foreground">{hint}</span>}
     </label>
   );
 }
-
-export const inputCls = "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground outline-none transition-all focus:border-ring focus:ring-2 focus:ring-ring/20";
