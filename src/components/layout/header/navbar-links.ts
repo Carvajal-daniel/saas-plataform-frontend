@@ -5,3 +5,4 @@ export const links = [
   { label: "Integraciones", href: "#integraciones" },
   { label: "Contacto", href: "#contacto" },
 ];
+

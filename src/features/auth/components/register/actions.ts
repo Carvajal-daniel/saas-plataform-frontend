@@ -14,7 +14,7 @@ export async function registerActions(data: RegisterInput) {
 
   try {
 
-    const response = await fetch(`${process.env.API_URL}/clients`, {
+    const response = await fetch(`${process.env.API_URL}/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

@@ -7,6 +7,8 @@ import PricingSection from "@/components/marketing/pricing/PricingSection";
 
 
 export default function Home() {
+
+
   return (
     <div className="overflow-hidden">
       
@@ -34,4 +36,6 @@ export default function Home() {
 
     </div>
   );
+  
 }
+

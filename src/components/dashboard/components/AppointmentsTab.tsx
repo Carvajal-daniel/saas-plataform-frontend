@@ -23,6 +23,8 @@ const MONTHS = [
   "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
   "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro",
 ];
+
+
 const WEEKDAYS = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 
 // Mapeamento semântico adaptivo (Fundo claro/colorido no Light e profundo no Dark)
@@ -114,7 +116,7 @@ function groupByDay(appts: Appointment[]) {
 
   [...appts]
     .sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`))
-    .forEach((a) => {
+    .map((a) => {
       if (!groups[a.date]) {
         let label = a.date;
         if (a.date === fmt(today)) label = "Hoje";
